@@ -11,6 +11,7 @@ public:
     ~GraphPeople();
     void initializeFirendList();
     int getPeopleNumber();
+    int getFriendDistance(const std::string& startPerson, const std::string& endPerson);
 private:
     //disable copy constructor and assignment constructor
     GraphPeople(const GraphPeople& rhs);

@@ -84,7 +84,7 @@ void GraphPeople::initializeFirendList()
         m_isInitialized = true;
     }
 
-    //dump all the whole graph
+    //dump the whole graph
 #if 0
     std::map< int,std::set<int> >::iterator iter = m_friendList.begin();
     while(iter != m_friendList.end())
@@ -111,4 +111,52 @@ int GraphPeople::getPeopleNumber()
     }
 
     return m_nameList.size();
+}
+
+
+int GraphPeople::getFriendDistance(const std::string& startPerson, const std::string& endPerson)
+{
+    if (m_nameList.find(startPerson) == m_nameList.end() || m_nameList.find(endPerson) == m_nameList.end())
+    {
+        cout<< "User can't be found, please have a check"<<endl;
+        return -1;
+    }
+
+    int startNum = m_nameList[startPerson];
+    int endNum = m_nameList[endPerson];
+    map<int,bool> includedSet;
+    map<int, int> distanceSet;
+
+    // distance of start person himself/herself is always 0
+    includedSet[startNum] = false;
+    distanceSet[startNum] = 0;
+
+    // run untile we reach the end person
+    while(includedSet.find(endNum) != includedSet.end() && includedSet.find(endNum)->second == true)
+    {
+        //firstly, find the person with the minimum distance in the included set, from the value which is NOT included
+        int min = INT_MAX;
+        int currentPersonNUm = 0;
+        for (map<int,bool>::iterator iter= includedSet.begin(); iter!=includedSet.end(); ++iter)
+        {
+            if (iter->second == false && distanceSet[iter->first] <=min)
+            {
+                min= distanceSet[iter->first];
+                currentPersonNUm = iter->first;
+            }
+        }
+        // add it to the included set
+        includedSet[currentPersonNUm] = true;
+        for (set<int>::iterator iter=m_friendList[currentPersonNUm].begin(); iter!=m_friendList[currentPersonNUm].end(); ++iter)
+        {
+            if (includedSet.find(*iter)!=includedSet.end() && includedSet.find(*iter)->second == true)
+            {
+                continue;
+            }
+            includedSet[*iter] = false;
+            distanceSet[*iter]=distanceSet[currentPersonNUm]+1;
+        }
+    }
+
+    return distanceSet[endNum];
 }
