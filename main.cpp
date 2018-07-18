@@ -1,9 +1,11 @@
+#include "graphpeople.h"
 #include <iostream>
-
 using namespace std;
 
 int main()
 {
-    cout << "Hello World!" << endl;
+    GraphPeople gp("SocialNetwork.txt");
+    gp.initializeFirendList();
+    cout<<gp.getPeopleNumber()<<endl;
     return 0;
 }
