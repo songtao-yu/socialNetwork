@@ -40,42 +40,42 @@ void GraphPeople::initializeFirendList()
         }
 
         // at the first beginning, we set the last one and the current one be same
-        if (m_nameList.empty())
+        if (m_nameDictionary.empty())
         {
             lastFirstPerson = firstPerson;
         }
 
         // construct name list
-        if (m_nameList.find(firstPerson) == m_nameList.end())
+        if (m_nameDictionary.find(firstPerson) == m_nameDictionary.end())
         {
-            int size = m_nameList.size();
-            m_nameList[firstPerson] = size;
+            int size = m_nameDictionary.size();
+            m_nameDictionary[firstPerson] = size;
         }
-        if (m_nameList.find(secondPerson) == m_nameList.end())
+        if (m_nameDictionary.find(secondPerson) == m_nameDictionary.end())
         {
-            int size = m_nameList.size();
-            m_nameList[secondPerson] = size;
+            int size = m_nameDictionary.size();
+            m_nameDictionary[secondPerson] = size;
         }
 
         // construct freind list
         if (firstPerson == lastFirstPerson)
         {
-            friends.insert(m_nameList[secondPerson]);
+            friends.insert(m_nameDictionary[secondPerson]);
         }
         else
         {
-            m_friendList[m_nameList[lastFirstPerson]] = friends;
+            m_friendMatrix[m_nameDictionary[lastFirstPerson]] = friends;
             friends.clear();
-            friends.insert(m_nameList[secondPerson]);
+            friends.insert(m_nameDictionary[secondPerson]);
             lastFirstPerson = firstPerson;
         }
     }
 
     // for the last person in the file, we need add it to the friend list
-    m_friendList[m_nameList[firstPerson]] = friends;
+    m_friendMatrix[m_nameDictionary[firstPerson]] = friends;
 
     // check the content of input file
-    if (m_nameList.empty())
+    if (m_nameDictionary.empty())
     {
         cout<<"No person pairs were found, please check the input file"<<endl;
     }
@@ -86,8 +86,8 @@ void GraphPeople::initializeFirendList()
 
     //dump the whole graph
 #if 0
-    std::map< int,std::set<int> >::iterator iter = m_friendList.begin();
-    while(iter != m_friendList.end())
+    std::map< int,std::set<int> >::iterator iter = m_friendMatrix.begin();
+    while(iter != m_friendMatrix.end())
     {
         cout<<iter->first<<endl;
         std::set<int>::iterator set_iter = iter->second.begin();
@@ -109,21 +109,20 @@ int GraphPeople::getPeopleNumber()
         cout<<"Initialization has NOT been run or initialization error"<<endl;
         return -1;
     }
-
-    return m_nameList.size();
+    return m_nameDictionary.size();
 }
 
 
 int GraphPeople::getFriendDistance(const std::string& startPerson, const std::string& endPerson)
 {
-    if (m_nameList.find(startPerson) == m_nameList.end() || m_nameList.find(endPerson) == m_nameList.end())
+    if (m_nameDictionary.find(startPerson) == m_nameDictionary.end() || m_nameDictionary.find(endPerson) == m_nameDictionary.end())
     {
         cout<< "User can't be found, please have a check"<<endl;
         return -1;
     }
 
-    int startNum = m_nameList[startPerson];
-    int endNum = m_nameList[endPerson];
+    int startNum = m_nameDictionary[startPerson];
+    int endNum = m_nameDictionary[endPerson];
     map<int,bool> includedSet;
     map<int, int> distanceSet;
 
@@ -131,10 +130,11 @@ int GraphPeople::getFriendDistance(const std::string& startPerson, const std::st
     includedSet[startNum] = false;
     distanceSet[startNum] = 0;
 
-    // run untile we reach the end person
-    while(includedSet.find(endNum) != includedSet.end() && includedSet.find(endNum)->second == true)
+    // traverse the whole graph from the start person
+    size_t counter =0;
+    while(counter<m_nameDictionary.size())
     {
-        //firstly, find the person with the minimum distance in the included set, from the value which is NOT included
+        //firstly, find the person with the minimal distance in the included set, from the value which is NOT included
         int min = INT_MAX;
         int currentPersonNUm = 0;
         for (map<int,bool>::iterator iter= includedSet.begin(); iter!=includedSet.end(); ++iter)
@@ -145,11 +145,30 @@ int GraphPeople::getFriendDistance(const std::string& startPerson, const std::st
                 currentPersonNUm = iter->first;
             }
         }
-        // add it to the included set
+        // add the minimal distance vertex to the included set
         includedSet[currentPersonNUm] = true;
-        for (set<int>::iterator iter=m_friendList[currentPersonNUm].begin(); iter!=m_friendList[currentPersonNUm].end(); ++iter)
+        counter++;
+#if 0
+        cout<<"current is: "<<counter<<endl;
+#endif
+
+        // break out if we have included the end person into the set
+        if (includedSet.find(endNum)!=includedSet.end() && includedSet[endNum]==true)
         {
+            break;
+        }
+
+        // try to add it adjacents vertices to the include set
+        for (set<int>::iterator iter=m_friendMatrix[currentPersonNUm].begin(); iter!=m_friendMatrix[currentPersonNUm].end(); ++iter)
+        {
+            // if the adjacent vertex has been in included set, bypass it
             if (includedSet.find(*iter)!=includedSet.end() && includedSet.find(*iter)->second == true)
+            {
+                continue;
+            }
+
+            // if distance of the adjacent vertex is less than distance of current vertex plus 1, bypass it
+            if (distanceSet.find(*iter)!=distanceSet.end() && (distanceSet.find(*iter)->second<=distanceSet[currentPersonNUm]+1))
             {
                 continue;
             }

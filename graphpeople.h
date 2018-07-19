@@ -18,8 +18,8 @@ private:
     GraphPeople& operator=(const GraphPeople& rhs);
 private:
     std::string m_fileName;
-    std::map<std::string, int> m_nameList;
-    std::map< int,std::set<int> > m_friendList;
+    std::map<std::string, int> m_nameDictionary; //key = person name, value = the associate number
+    std::map< int,std::set<int> > m_friendMatrix; // key = associate number of person name, value = set of his/her direct friends
     bool m_isInitialized;
 };
 #endif
