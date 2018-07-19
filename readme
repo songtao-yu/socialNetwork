@@ -1,10 +1,10 @@
 ####procedure####
-1. construct the graph people object with identify the input file(SocialNetwork.txt)
+1. construct the graph people object with the input file(SocialNetwork.txt)
 2. initialize two containers
    1) m_nameDictionary: make the map between person name and one unique number
    2) m_friendMatrix: we can take it to be one matrix, in which the header of each line is
-      one person(representing with the number in m_nameDictionary) and the remaining of the
-      line is the direct friends(also with the number in m_nameDictionary).
+      one person(representing with the number in m_nameDictionary) and the remainings of the
+      line are the direct friends(also with the number in m_nameDictionary).
    3) FYI - we look through the input file one time to construct the two contains.
 3. determine the total number with the function "getPeopleNumber()"
    1) if the end user doesn't call the function "initializeFirendList()" ahead, error
