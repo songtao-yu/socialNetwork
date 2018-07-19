@@ -102,7 +102,7 @@ void GraphPeople::initializeFirendList()
 #endif
 }
 
-int GraphPeople::getPeopleNumber()
+int GraphPeople::getPeopleNumber() const
 {
     if (!m_isInitialized)
     {

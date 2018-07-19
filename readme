@@ -1,0 +1,24 @@
+####procedure####
+1. construct the graph people object with identify the input file(SocialNetwork.txt)
+2. initialize two containers
+   1) m_nameDictionary: make the map between person name and one unique number
+   2) m_friendMatrix: we can take it to be one matrix, in which the header of each line is
+      one person(representing with the number in m_nameDictionary) and the remaining of the
+      line is the direct friends(also with the number in m_nameDictionary).
+   3) FYI - we look through the input file one time to construct the two contains.
+3. determine the total number with the function "getPeopleNumber()"
+   1) if the end user doesn't call the function "initializeFirendList()" ahead, error
+      will be reprted out.
+4. determine the distance between two persons with the function "getFriendDistance()"
+   1) The basic idea in the function comes from "Dijkstra's algorithm" as below link:
+      https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm
+   2) I made some improvements in case that the shortest path among two persons has
+      been found before traversing the whole graph matrix. Please see the lines from
+      156 to 160 for the detailed.
+
+####misc####
+1. The development tool I used is QT Creator with the MinGW (32 bit) in windows 7. 
+2. I am attaching two version. One is for release and the other is for debugging
+3. The output of my APP is as below:
+   Total number of people is: 82168
+   The distance between STACEY_STRIMPLE and RICH_OMLI is: 4

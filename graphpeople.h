@@ -10,7 +10,7 @@ public:
     GraphPeople(const std::string& fileName);
     ~GraphPeople();
     void initializeFirendList();
-    int getPeopleNumber();
+    int getPeopleNumber() const;
     int getFriendDistance(const std::string& startPerson, const std::string& endPerson);
 private:
     //disable copy constructor and assignment constructor
